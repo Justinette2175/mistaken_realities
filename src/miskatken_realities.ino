@@ -134,7 +134,8 @@ void setup()
 void loop()
 {
     readAllTouchInputs();
-    printTouchInputs();
+    delay(50);
+    // printTouchInputs();
     // if (digitalRead(B_TN) == LOW)
     // {
     //     Serial.println("I'm pressing");
@@ -197,17 +198,19 @@ void printTouchInputs()
 {
     for (int i = 0; i < 12; i++)
     {
-        Serial.println(i);
-        Serial.print(' : ');
+        Serial.print(i);
+        Serial.print(" : ");
         if (touchStates[i] == 1)
         {
-            Serial.print('off');
+            Serial.print("on");
         }
         else
         {
-            Serial.print('on');
+            Serial.print("off");
         }
+        Serial.print(" || ");
     }
+    Serial.println("");
 }
 
 void mpr121_setup(unsigned char address)
