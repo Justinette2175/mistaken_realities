@@ -122,6 +122,7 @@ void setup()
 
     /* INPUT: PUSH BUTTON */
     pinMode(B_TN, INPUT_PULLUP); // NO RESISTOR
+    setupTouchDevices();
 
     connectToLAN();
     /* START UDP SERVICE - USED BY SIMPLE-OSC */

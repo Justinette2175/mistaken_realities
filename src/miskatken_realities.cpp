@@ -149,14 +149,15 @@ void setup()
 
 void loop()
 {
-    if (digitalRead(B_TN) == LOW)
-    {
-        Serial.println("I'm pressing");
-        sendOSCData(1);
-        delay(1000);
-    }
+    readAllTouchInputs();
+    // if (digitalRead(B_TN) == LOW)
+    // {
+    //     Serial.println("I'm pressing");
+    //     sendOSCData(1);
+    //     delay(1000);
+    // }
 
-    sendOSCData(1.0);
+    // sendOSCData(1.0);
     // If there is position data available, read and print it
 }
 
