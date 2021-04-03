@@ -188,9 +188,23 @@ void readTouchInputs()
             {
                 touchStates[globalIndex] = 0;
             }
-            Serial.println("Status of touch states");
-            Serial.print(touchStates[globalIndex]);
-            Serial.println("");
+        }
+    }
+}
+
+void printTouchInputs()
+{
+    for (int i = 0; i < 12; i++)
+    {
+        Serial.println(i);
+        Serial.print(' : ');
+        if (touchStates[i] == 1)
+        {
+            Serial.print('off');
+        }
+        else
+        {
+            Serial.print('on')
         }
     }
 }
