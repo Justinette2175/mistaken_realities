@@ -4,60 +4,29 @@
 
 #include "Particle.h"
 #line 1 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
-/****************************************************************
-I2C_ZX_Demo.ino
-XYZ Interactive ZX Sensor
-Shawn Hymel @ SparkFun Electronics
-May 6, 2015
-https://github.com/sparkfun/SparkFun_ZX_Distance_and_Gesture_Sensor_Arduino_Library
-
-Tests the ZX sensor's ability to read ZX data over I2C. This demo
-configures the ZX sensor and periodically polls for Z-axis and X-axis data.
-
-Hardware Connections:
- 
- Arduino Pin  ZX Sensor Board  Function
- ---------------------------------------
- 5V           VCC              Power
- GND          GND              Ground
- A4           DA               I2C Data
- A5           CL               I2C Clock
-
-Resources:
-Include Wire.h and ZX_Sensor.h
-
-Development environment specifics:
-Written in Arduino 1.6.3
-Tested with a SparkFun RedBoard
-
-This code is beerware; if you see me (or any other SparkFun 
-employee) at the local, and you've found our code helpful, please
-buy us a round!
-
-Distributed as-is; no warranty is given.
-****************************************************************/
-
 #include <Wire.h>
 
-/* IF USING MAX-MSP - THEN THIS */
 #include "simple-OSC.h"
 #include "math.h"
 
 /* MPR121 CONSTANTS */
+// const int irqpins[2] = {7, 8};
+// const unsigned char addresses[2] = {0x5A, 0x5C};
+
 void connectToLAN();
 void sendOSCData(float x);
 void setup();
 void loop();
 void setupTouchDevices();
 void readAllTouchInputs();
-void readTouchInputs(int index);
+void readTouchInputs();
 void mpr121_setup(unsigned char address);
 boolean checkInterrupt(int pin);
 void set_register(int address, unsigned char r, unsigned char v);
-#line 41 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
-const int irqpins[2] = {7, 8};
-const unsigned char addresses[2] = {0x5A, 0x5C};
-boolean touchStates[24]; //to keep track of the previous touch states
+#line 10 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
+const int irqpin = 7;
+const unsigned char MPR121_address = 0x5A;
+boolean touchStates[12]; //to keep track of the previous touch states
 int lastTouchedSensorIndex = 0;
 
 /*
@@ -184,7 +153,6 @@ void loop()
     {
         Serial.println("I'm pressing");
         sendOSCData(1);
-        /* REQUEST LOCATION FROM GOOGLE */
         delay(1000);
     }
 
@@ -199,30 +167,25 @@ This allows for 24 independent touch sensors rendings.
 
 void setupTouchDevices()
 {
-    for (int i = 0; i < 2; i++)
-    {
-        pinMode(irqpins[i], INPUT);
-        digitalWrite(irqpins[i], HIGH);
-    }
+    pinMode(irqpin, INPUT);
+    digitalWrite(irqpin, HIGH);
 
     Wire.begin();
 
     mpr121_setup(0x5A);
-    mpr121_setup(0x5C);
 }
 
 void readAllTouchInputs()
 {
-    readTouchInputs(0);
-    readTouchInputs(1);
+    readTouchInputs();
 }
 
-void readTouchInputs(int index)
+void readTouchInputs()
 {
-    if (!checkInterrupt(irqpins[index]))
+    if (!checkInterrupt(irqpin))
     {
         //read the touch state from the MPR121
-        Wire.requestFrom(addresses[index], 2);
+        Wire.requestFrom(MPR121_address, 2);
 
         byte LSB = Wire.read();
         byte MSB = Wire.read();
@@ -231,7 +194,7 @@ void readTouchInputs(int index)
 
         for (int i = 0; i < 12; i++)
         { // Check what electrodes were pressed
-            int globalIndex = i + (index * 12);
+            int globalIndex = i;
             if (touched & (1 << i))
             {
                 touchStates[globalIndex] = 1;
@@ -240,6 +203,9 @@ void readTouchInputs(int index)
             {
                 touchStates[globalIndex] = 0;
             }
+            Serial.println("Status of touch states");
+            Serial.print(touchStates[globalIndex]);
+            Serial.println("");
         }
     }
 }

@@ -19,23 +19,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   7 .module_info_crc 00000004  000d6148  000d6148  00026148  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  8 .debug_info   00142e32  00000000  00000000  0002614c  2**0
+  8 .debug_info   00142ee3  00000000  00000000  0002614c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_abbrev 00015bc8  00000000  00000000  00168f7e  2**0
+  9 .debug_abbrev 00015bd9  00000000  00000000  0016902f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0002b377  00000000  00000000  0017eb46  2**0
+ 10 .debug_loc    0002b374  00000000  00000000  0017ec08  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 000028b0  00000000  00000000  001a9ebd  2**0
+ 11 .debug_aranges 000028b0  00000000  00000000  001a9f7c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000077d8  00000000  00000000  001ac76d  2**0
+ 12 .debug_ranges 000077d8  00000000  00000000  001ac82c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_macro  00037441  00000000  00000000  001b3f45  2**0
+ 13 .debug_macro  00037442  00000000  00000000  001b4004  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_line   000370c9  00000000  00000000  001eb386  2**0
+ 14 .debug_line   000370b5  00000000  00000000  001eb446  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    0010b88d  00000000  00000000  0022244f  2**0
+ 15 .debug_str    0010b8d7  00000000  00000000  002224fb  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_frame  00006dd0  00000000  00000000  0032dcdc  2**2
+ 16 .debug_frame  00006dc8  00000000  00000000  0032ddd4  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -410,7 +410,6 @@ void loop()
         sendOSCData(1);
    d421c:	eeb7 0a00 	vmov.f32	s0, #112	; 0x3f800000  1.0
    d4220:	f7ff ff94 	bl	d414c <_Z11sendOSCDataf>
-        /* REQUEST LOCATION FROM GOOGLE */
         delay(1000);
    d4224:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
    d4228:	f000 fb46 	bl	d48b8 <delay>
