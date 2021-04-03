@@ -134,6 +134,7 @@ void setup()
 void loop()
 {
     readAllTouchInputs();
+    printTouchInputs();
     // if (digitalRead(B_TN) == LOW)
     // {
     //     Serial.println("I'm pressing");
@@ -204,7 +205,7 @@ void printTouchInputs()
         }
         else
         {
-            Serial.print('on')
+            Serial.print('on');
         }
     }
 }
