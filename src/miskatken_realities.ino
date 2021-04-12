@@ -5,20 +5,15 @@
 #include "simple-OSC.h"
 #include "math.h"
 
-/* MPR121 CONSTANTS */
-// const int irqpins[2] = {7, 8};
-// const unsigned char addresses[2] = {0x5A, 0x5C};
-
 const int irqpin = 7;
 const unsigned char MPR121_address = 0x5A;
 boolean touchStates[12]; //to keep track of the previous touch states
 int lastTouchedSensorIndex = 0;
 
-/*
-    MPR121.h
-	April 8, 2010
-	by: Jim Lindblom
-*/
+const int flexPin = A0;
+float flexValue;
+const int flexPin2 = A1;
+float flexValue2;
 
 // MPR121 Register Defines
 #define MHD_R 0x2B
@@ -82,7 +77,7 @@ char argonIPAddress[16];
 /* EXPLICIT REMOTE ADDRESS DECLARATION IF IS KNOWN - 
  * REMOTE ADDRESS CAN ALSO BE RETRIEVED FROM RECEIVED 
  * OSC/UDP PACKET  */
-IPAddress remoteIP(192, 168, 1, 9);
+IPAddress remoteIP(192, 168, 2, 2);
 /* PORTS FOR INCOMING & OUTGOIN9 DATA */
 unsigned int outPort = 8000;
 
@@ -98,22 +93,18 @@ void connectToLAN()
     delay(5);
     /* GET HOST (ARGON) ASSIGNED IP */
     Serial.print("ARGON IP (DHCP): ");
-    //argonIP = WiFi.localIP();
-    //sprintf(argonIPAddress, "%d.%d.%d.%d", argonIP[0], argonIP[1], argonIP[2], argonIP[3]);
     Serial.println(WiFi.localIP());
 }
 
-void sendOSCData(float x)
+void sendOSCData(float x, String path)
 {
-    OSCMessage outMessage("/touch");
+    OSCMessage outMessage(path);
     outMessage.addFloat(x);
     outMessage.send(Udp, remoteIP, outPort);
 }
 
 void setup()
 {
-
-    uint8_t ver;
 
     // Initialize Serial port
     Serial.begin(9600);
@@ -137,18 +128,36 @@ void setup()
 
 void loop()
 {
-    // readAllTouchInputs();
-    delay(50);
-    // printTouchInputs();
-    if (digitalRead(B_TN) == LOW)
-    {
-        Serial.println("I'm pressing");
-        sendOSCData(1.0);
-        delay(1000);
-    }
+    delay(80);
+    readAllTouchInputs();
+    sendActiveTouches();
+    sendFlexData();
+}
 
-    // sendOSCData(1.0);
-    // If there is position data available, read and print it
+void sendFlexData()
+{
+    flexValue = analogRead(flexPin);
+    if (flexValue > 1)
+    {
+        sendOSCData(flexValue, "/grass");
+    }
+    flexValue2 = analogRead(flexPin2);
+    if (flexValue2 > 1)
+    {
+        sendOSCData(flexValue2, "/branch");
+    }
+}
+
+void sendActiveTouches()
+{
+    for (int i = 0; i < 12; i++)
+    {
+        if (touchStates[i] == 1)
+        {
+            sendOSCData(i + 1, "/touch");
+            touchStates[i] = 0;
+        }
+    }
 }
 
 /****************** MPR121 FUNCTIONS ********************************************
@@ -188,6 +197,8 @@ void readTouchInputs()
             int globalIndex = i;
             if (touched & (1 << i))
             {
+                Serial.print("pressed");
+                Serial.println(i);
                 touchStates[globalIndex] = 1;
             }
             else
