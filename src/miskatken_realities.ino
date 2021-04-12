@@ -1,3 +1,5 @@
+#include <Particle.h>
+
 #include <Wire.h>
 
 #include "simple-OSC.h"
@@ -125,7 +127,9 @@ void setup()
     setupTouchDevices();
 
     connectToLAN();
+
     /* START UDP SERVICE - USED BY SIMPLE-OSC */
+    Udp.begin(8001);
 
     delay(5); // Force Serial.println in void setup()
     Serial.println("Completed void setup");
@@ -133,15 +137,15 @@ void setup()
 
 void loop()
 {
-    readAllTouchInputs();
+    // readAllTouchInputs();
     delay(50);
     // printTouchInputs();
-    // if (digitalRead(B_TN) == LOW)
-    // {
-    //     Serial.println("I'm pressing");
-    //     sendOSCData(1);
-    //     delay(1000);
-    // }
+    if (digitalRead(B_TN) == LOW)
+    {
+        Serial.println("I'm pressing");
+        sendOSCData(1.0);
+        delay(1000);
+    }
 
     // sendOSCData(1.0);
     // If there is position data available, read and print it

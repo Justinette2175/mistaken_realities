@@ -2,8 +2,9 @@
 //       THIS IS A GENERATED FILE - DO NOT EDIT       //
 /******************************************************/
 
-#include "Particle.h"
 #line 1 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
+#include <Particle.h>
+
 #include <Wire.h>
 
 #include "simple-OSC.h"
@@ -24,7 +25,7 @@ void printTouchInputs();
 void mpr121_setup(unsigned char address);
 boolean checkInterrupt(int pin);
 void set_register(int address, unsigned char r, unsigned char v);
-#line 10 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
+#line 12 "/Users/justinegagnepain/Documents/concordia_classes/CART_461_Tangible_Media_Studio/mistaken_realities_latest/src/miskatken_realities.ino"
 const int irqpin = 7;
 const unsigned char MPR121_address = 0x5A;
 boolean touchStates[12]; //to keep track of the previous touch states
@@ -143,7 +144,9 @@ void setup()
     setupTouchDevices();
 
     connectToLAN();
+
     /* START UDP SERVICE - USED BY SIMPLE-OSC */
+    Udp.begin(8001);
 
     delay(5); // Force Serial.println in void setup()
     Serial.println("Completed void setup");
@@ -151,15 +154,15 @@ void setup()
 
 void loop()
 {
-    readAllTouchInputs();
+    // readAllTouchInputs();
     delay(50);
     // printTouchInputs();
-    // if (digitalRead(B_TN) == LOW)
-    // {
-    //     Serial.println("I'm pressing");
-    //     sendOSCData(1);
-    //     delay(1000);
-    // }
+    if (digitalRead(B_TN) == LOW)
+    {
+        Serial.println("I'm pressing");
+        sendOSCData(1.0);
+        delay(1000);
+    }
 
     // sendOSCData(1.0);
     // If there is position data available, read and print it
